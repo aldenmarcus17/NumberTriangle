@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -92,6 +93,36 @@ public class NumberTriangle {
         return -1;
     }
 
+    private void getLeft(ArrayList<NumberTriangle[]> numbers, int index, int row) {
+        if (row < numbers.size()) {
+            NumberTriangle left = numbers.get(row)[index];
+            this.setLeft(left);
+
+            if (left.left == null){
+                left.getLeft(numbers, index, row + 1);
+            }
+
+            if (left.right == null){
+                left.getRight(numbers, index + 1, row + 1);
+            }
+        }
+    }
+
+    private void getRight(ArrayList<NumberTriangle[]> numbers, int index, int row) {
+        if (row < numbers.size()) {
+            NumberTriangle right = numbers.get(row)[index];
+            this.setRight(right);
+
+            if (right.left == null){
+                right.getLeft(numbers, index, row + 1);
+            }
+
+            if (right.right == null){
+                right.getRight(numbers, index + 1, row + 1);
+            }
+        }
+    }
+
     /** Read in the NumberTriangle structure from a file.
      *
      * You may assume that it is a valid format with a height of at least 1,
@@ -109,25 +140,27 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-
-        // TODO define any variables that you want to use to store things
-
-        // will need to return the top of the NumberTriangle,
-        // so might want a variable for that.
-        NumberTriangle top = null;
+        ArrayList<NumberTriangle[]> lines = new ArrayList<>();
+        NumberTriangle top;
 
         String line = br.readLine();
         while (line != null) {
+            String[] parts = line.split(" ");
 
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
+            NumberTriangle[] NumberTriList = new NumberTriangle[parts.length];
+            for (int i = 0; i < NumberTriList.length; i++) {
+                NumberTriList[i] = new NumberTriangle(Integer.parseInt(parts[i]));
+            }
+            lines.add(NumberTriList);
 
-            // TODO process the line
-
-            //read the next line
             line = br.readLine();
         }
         br.close();
+
+        top = lines.get(0)[0];
+        top.getLeft(lines, 0, 1);
+        top.getRight(lines, 1, 1);
+
         return top;
     }
 
