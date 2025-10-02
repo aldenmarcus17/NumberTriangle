@@ -89,8 +89,14 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
-        return -1;
+        if(path.isEmpty()) {return this.root;}
+        else if(path.charAt(0) == 'l'){
+            return this.left.retrieve(path.substring(1));
+        }
+        else if(path.charAt(0) == 'r'){
+            return this.right.retrieve(path.substring(1));
+        }
+        else {return -1;}
     }
 
     private void getLeft(ArrayList<NumberTriangle[]> numbers, int index, int row) {
